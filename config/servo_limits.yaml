@@ -1,0 +1,7 @@
+eyes_pan:   { min: 60,  max: 120, center: 90 } # глаза вверх-вниз
+eyes_tilt:  { min: 70,  max: 110, center: 90 } # глаза влево-вправо
+lid_tl:     { min: 0,   max: 45,  center: 22 } # верхний левый век
+lid_tr:     { min: 0,   max: 45,  center: 22 } # верхний правый век
+lid_bl:     { min: 0,   max: 45,  center: 22 } # нижний левый век
+lid_br:     { min: 0,   max: 45,  center: 22 } # нижний правый век
+mouth:      { min: 0,   max: 30,  center: 0  } # рот
