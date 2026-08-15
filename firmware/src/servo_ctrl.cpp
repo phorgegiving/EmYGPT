@@ -1,0 +1,85 @@
+#include "config.h"
+#include "servo_ctrl.h"
+#include <Arduino.h>
+
+#define DEFAULT_SPEED 3.0f // скоростт изинга
+
+static ServoTarget servos[SERVO_COUNT];
+
+// Сложный перевод градусов для цикла
+static uint32_t angle_to_duty(float angle, int minAngle, int maxAngle) {
+    float clamped = constrain(angle, (float)minAngle, (float)maxAngle);
+    float t = (clamped - minAngle) / (maxAngle - minAngle);
+    float us = SERVO_MIN_US + t * (SERVO_MAX_US - SERVO_MIN_US);
+
+    return (uint32_t)((us / 20000.0f) * 65535.0f);
+}
+
+static void apply(ServoID id) {
+    uint32_t duty = angle_to_duty(
+        servos[id].current,
+        servos[id].minAngle,
+        servos[id].maxAngle
+    );
+    ledcWrite(servos[id].pwmChannel, duty);
+}
+
+static void init_servo(ServoID id, int pin, int minA, int maxA, int center, int ch) {
+    servos[id].pin       = pin;
+    servos[id].minAngle  = minA;
+    servos[id].maxAngle  = maxA;
+    servos[id].current   = center;
+    servos[id].angle     = center;
+    servos[id].speed     = DEFAULT_SPEED;
+    servos[id].pwmChannel = ch;
+
+    ledcSetup(ch, PWM_FREQ, PWM_RESOLUTION);
+    ledcAttachPin(pin, ch);
+    apply(id);
+}
+
+void servos_init() {
+    init_servo(SERVO_EYES_PAN,  PIN_EYES_PAN,  EYES_PAN_MIN,  EYES_PAN_MAX,  EYES_PAN_CTR,  0);
+    init_servo(SERVO_EYES_TILT, PIN_EYES_TILT, EYES_TILT_MIN, EYES_TILT_MAX, EYES_TILT_CTR, 1);
+    init_servo(SERVO_LID_TL,    PIN_LID_TL,    LID_MIN, LID_MAX, LID_CTR, 2);
+    init_servo(SERVO_LID_TR,    PIN_LID_TR,    LID_MIN, LID_MAX, LID_CTR, 3);
+    init_servo(SERVO_LID_BL,    PIN_LID_BL,    LID_MIN, LID_MAX, LID_CTR, 4);
+    init_servo(SERVO_LID_BR,    PIN_LID_BR,    LID_MIN, LID_MAX, LID_CTR, 5);
+    init_servo(SERVO_MOUTH,     PIN_MOUTH,     MOUTH_MIN, MOUTH_MAX, MOUTH_MIN, 6);
+}
+
+void servos_update() {
+    for (int i = 0; i < SERVO_COUNT; i++) {
+        float diff = servos[i].angle - servos[i].current;
+        if (abs(diff) < 0.5f) {
+            servos[i].current = servos[i].angle;
+        } else {
+            float step = constrain(diff, -servos[i].speed, servos[i].speed);
+            servos[i].current += step;
+        }
+        apply((ServoID)i);
+    }
+}
+
+void servo_set_target(ServoID id, float angle) {
+    servos[id].angle = constrain(angle, (float)servos[id].minAngle, (float)servos[id].maxAngle);
+}
+
+void servo_set_all(float angles[SERVO_COUNT]) {
+    for (int i = 0; i < SERVO_COUNT; i++) {
+        servo_set_target((ServoID)i, angles[i]);
+    }
+}
+
+void servos_center() {
+    servo_set_target(SERVO_EYES_PAN,  EYES_PAN_CTR);
+    servo_set_target(SERVO_EYES_TILT, EYES_TILT_CTR);
+    servo_set_target(SERVO_LID_TL,   LID_CTR);
+    servo_set_target(SERVO_LID_TR,   LID_CTR);
+    servo_set_target(SERVO_LID_BL,   LID_CTR);
+    servo_set_target(SERVO_LID_BR,   LID_CTR);
+    servo_set_target(SERVO_MOUTH,    MOUTH_MIN);
+}
+
+// мне очень не понравились плюсы, почему ардуино и еспишка не на питоне =(
+// ps. я знаю что есть micropython, но я не хочу его юзать, на нем не все работает
