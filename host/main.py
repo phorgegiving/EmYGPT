@@ -14,7 +14,6 @@ def main():
     print(Memory.as_text(memory))
  
     print(f"[{persona['name']}] готов.")
-    facts = memory.get_facts()
  
     while True:
         try:

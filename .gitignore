@@ -220,3 +220,6 @@ config/settings.env
 host/data/history.json
 firmware/.vscode/extensions.json
 host/data/history.json
+host/data/history.jsonl
+host/data/memory.json
+host/data/memory.json
