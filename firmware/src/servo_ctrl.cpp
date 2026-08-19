@@ -41,10 +41,10 @@ static void init_servo(ServoID id, int pin, int minA, int maxA, int center, int 
 void servos_init() {
     init_servo(SERVO_EYES_PAN,  PIN_EYES_PAN,  EYES_PAN_MIN,  EYES_PAN_MAX,  EYES_PAN_CTR,  0);
     init_servo(SERVO_EYES_TILT, PIN_EYES_TILT, EYES_TILT_MIN, EYES_TILT_MAX, EYES_TILT_CTR, 1);
-    init_servo(SERVO_LID_TL,    PIN_LID_TL,    LID_MIN, LID_MAX, LID_CTR, 2);
-    init_servo(SERVO_LID_TR,    PIN_LID_TR,    LID_MIN, LID_MAX, LID_CTR, 3);
-    init_servo(SERVO_LID_BL,    PIN_LID_BL,    LID_MIN, LID_MAX, LID_CTR, 4);
-    init_servo(SERVO_LID_BR,    PIN_LID_BR,    LID_MIN, LID_MAX, LID_CTR, 5);
+    init_servo(SERVO_LID_TL,    PIN_LID_TL,    LID_TL_MIN, LID_TL_MAX, LID_TL_OPEN, 2);
+    init_servo(SERVO_LID_TR,    PIN_LID_TR,    LID_TR_MIN, LID_TR_MAX, LID_TR_OPEN, 3);
+    init_servo(SERVO_LID_BL,    PIN_LID_BL,    LID_BL_MIN, LID_BL_MAX, LID_BL_OPEN, 4);
+    init_servo(SERVO_LID_BR,    PIN_LID_BR,    LID_BR_MIN, LID_BR_MAX, LID_BR_OPEN, 5);
     init_servo(SERVO_MOUTH,     PIN_MOUTH,     MOUTH_MIN, MOUTH_MAX, MOUTH_MIN, 6);
 }
 
@@ -74,10 +74,10 @@ void servo_set_all(float angles[SERVO_COUNT]) {
 void servos_center() {
     servo_set_target(SERVO_EYES_PAN,  EYES_PAN_CTR);
     servo_set_target(SERVO_EYES_TILT, EYES_TILT_CTR);
-    servo_set_target(SERVO_LID_TL,   LID_CTR);
-    servo_set_target(SERVO_LID_TR,   LID_CTR);
-    servo_set_target(SERVO_LID_BL,   LID_CTR);
-    servo_set_target(SERVO_LID_BR,   LID_CTR);
+    servo_set_target(SERVO_LID_TL,   LID_TL_OPEN);
+    servo_set_target(SERVO_LID_TR,   LID_TR_OPEN);
+    servo_set_target(SERVO_LID_BL,   LID_BL_OPEN);
+    servo_set_target(SERVO_LID_BR,   LID_BR_OPEN);
     servo_set_target(SERVO_MOUTH,    MOUTH_MIN);
 }
 

@@ -15,19 +15,35 @@
 
 // УГЛЫ
 #define EYES_PAN_MIN   60
-#define EYES_PAN_MAX   120
-#define EYES_PAN_CTR   90
+#define EYES_PAN_MAX   90
+#define EYES_PAN_CTR   75
 
 #define EYES_TILT_MIN  70
 #define EYES_TILT_MAX  110
 #define EYES_TILT_CTR  90
 
-#define LID_MIN        0
-#define LID_MAX        45
-#define LID_CTR        22
+#define LID_TL_MIN     0
+#define LID_TL_MAX     7
+#define LID_TL_OPEN    7
+#define LID_TL_CLOSED  0
+ 
+#define LID_TR_MIN     0
+#define LID_TR_MAX     7
+#define LID_TR_OPEN    0
+#define LID_TR_CLOSED  7
+ 
+#define LID_BL_MIN     0
+#define LID_BL_MAX     4
+#define LID_BL_OPEN    0
+#define LID_BL_CLOSED  4
+ 
+#define LID_BR_MIN     0
+#define LID_BR_MAX     4
+#define LID_BR_OPEN    4
+#define LID_BR_CLOSED  0
 
 #define MOUTH_MIN      0
-#define MOUTH_MAX      30
+#define MOUTH_MAX      20
 
 // BLE
 #define BLE_DEVICE_NAME     "AnimatronicHead"
