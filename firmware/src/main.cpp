@@ -44,6 +44,10 @@ void handle_command(const String& json) {
             comm_send("{\"ok\":true,\"cmd\":\"center\"}");
             return;
         }
+        if (cmd == "ping") {
+            comm_send("{\"ok\":true,\"cmd\":\"ping\"}");
+            return;
+        }
     }
 
     comm_send("{\"ok\":false,\"err\":\"unknown\"}");
