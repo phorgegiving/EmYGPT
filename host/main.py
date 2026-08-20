@@ -10,6 +10,8 @@ from host.data_layer.history import History
 from host.data_layer.state_control import EmotionState
 from host.interpreter.transport import HeadTransport
 from host.interpreter.servo_calc import calculate, to_array
+from host.tts.engine import warmup, synthesize
+from host.tts.playback import speak_with_lipsync
 
 
 LIMITS_PATH = Path(__file__).parent.parent / "config" / "servo_limits.yaml"
@@ -41,6 +43,10 @@ async def main():
     facts = memory.get_facts()
     if facts:
         print(f"  загружено фактов из памяти: {len(facts)}")
+
+            # прогрев
+    print("[TTS] прогрев модели...")
+    await asyncio.get_event_loop().run_in_executor(None, warmup)
     print()
  
     while True:
@@ -90,6 +96,21 @@ async def main():
                 except Exception as e:
                     print(f"[BLE] ошибка отправки blink: {e}")
  
+        try:
+            audio, sample_rate = await asyncio.get_event_loop().run_in_executor(
+                None, synthesize, response["text"]
+            )
+            await speak_with_lipsync(
+                audio=audio,
+                sample_rate=sample_rate,
+                base_pose=pose,
+                limits=limits,
+                transport=transport,
+                connected=connected,
+            )
+        except Exception as e:
+            print(f"[TTS] ошибка озвучки: {e}")
+
         print(f"\n{persona['name']}: {response['text']}")
         print(f"  эмоции: {emotion_state.dominant()} | functions: {functions}")
         print(f"  поза: {pose}\n")

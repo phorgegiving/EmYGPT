@@ -69,6 +69,15 @@ class HeadTransport:
         payload = json.dumps({"cmd": "blink", "times": times})
         await self._client.write_gatt_char(CHAR_UUID, payload.encode("utf-8"))
 
+    async def send_mouth(self, angle: float):
+        if not self._client or not self._client.is_connected:
+            raise RuntimeError("BLE не подключён.")
+
+        payload = json.dumps({"m": round(angle, 1)})
+        await self._client.write_gatt_char(
+            CHAR_UUID, payload.encode("utf-8"), response=False
+        )
+
     @property
     def is_connected(self) -> bool:
         return bool(self._client and self._client.is_connected)

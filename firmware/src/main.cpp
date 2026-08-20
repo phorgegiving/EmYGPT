@@ -22,7 +22,11 @@ void handle_command(const String& json) {
         return;
     }
 
-    // углы делаются тут
+    if (doc["m"].is<float>() || doc["m"].is<int>()) {
+        float angle = doc["m"].as<float>();
+        servo_set_target(SERVO_MOUTH, angle);
+    }
+
     if (doc["s"].is<JsonArray>()) {
         JsonArray arr = doc["s"].as<JsonArray>();
         if (arr.size() == SERVO_COUNT) {

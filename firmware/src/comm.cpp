@@ -18,12 +18,12 @@ class ServerCallbacks : public BLEServerCallbacks {
     }
     void onDisconnect(BLEServer* pServer) override {
         deviceConnected = false;
-        Serial.println("[BLE] клиент отключился... =(");
+        Serial.println("[BLE] клиент отключился...");
         pServer->startAdvertising();
     }
 };
 
-// Колбек для получния данных
+// Колбек для получения данных
 class CharCallbacks : public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic* pChar) override {
         std::string value = pChar->getValue();
@@ -43,8 +43,9 @@ void comm_init() {
 
     pCharacteristic = pService->createCharacteristic(
         BLE_CHAR_UUID,
-        BLECharacteristic::PROPERTY_READ  |
-        BLECharacteristic::PROPERTY_WRITE |
+        BLECharacteristic::PROPERTY_READ    |
+        BLECharacteristic::PROPERTY_WRITE   |
+        BLECharacteristic::PROPERTY_WRITE_NR |
         BLECharacteristic::PROPERTY_NOTIFY
     );
     pCharacteristic->addDescriptor(new BLE2902());
@@ -75,5 +76,3 @@ void comm_send(const char* msg) {
         pCharacteristic->notify();
     }
 }
-
-// мне не понравились плюсы

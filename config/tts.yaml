@@ -1,0 +1,10 @@
+language: ru
+speaker: eugene        # варианты: aidar, baya, kseniya, xenia, eugene, random
+sample_rate: 48000
+device: cpu            # "cuda" если есть GPU
+
+# Липсинк
+lipsync_frame_ms: 50    # частота кадров огибающей (совпадает с 50Гц циклом прошивки)
+lipsync_smoothing: 0.35  # 0..1, выше = более плавно, но менее отзывчиво
+
+lipsync_start_delay_ms: 60
