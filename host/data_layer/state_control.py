@@ -12,7 +12,6 @@ class EmotionState:
         self.decay_rate: float = cfg["decay_rate"]
 
         self._current = {e: 0.0 for e in EMOTIONS}
-        self._current["neutral"] = 1.0
 
     def update(self, new_emotions: dict):
 

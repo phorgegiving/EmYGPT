@@ -2,16 +2,13 @@
 #include "servo_ctrl.h"
 #include <Arduino.h>
 
-#define DEFAULT_SPEED 3.0f // скоростт изинга
+#define DEFAULT_SPEED 3.0f
 
 static ServoTarget servos[SERVO_COUNT];
 
-// Сложный перевод градусов для цикла
 static uint32_t angle_to_duty(float angle, int minAngle, int maxAngle) {
     float clamped = constrain(angle, (float)minAngle, (float)maxAngle);
-    float t = (clamped - minAngle) / (maxAngle - minAngle);
-    float us = SERVO_MIN_US + t * (SERVO_MAX_US - SERVO_MIN_US);
-
+    float us = SERVO_MIN_US + (clamped / 180.0f) * (SERVO_MAX_US - SERVO_MIN_US);
     return (uint32_t)((us / 20000.0f) * 65535.0f);
 }
 
@@ -81,5 +78,3 @@ void servos_center() {
     servo_set_target(SERVO_MOUTH,    MOUTH_MIN);
 }
 
-// мне очень не понравились плюсы, почему ардуино и еспишка не на питоне =(
-// ps. я знаю что есть micropython, но я не хочу его юзать, на нем не все работает
