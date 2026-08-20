@@ -23,27 +23,27 @@
 #define EYES_TILT_CTR  90
 
 #define LID_TL_MIN     0
-#define LID_TL_MAX     7
-#define LID_TL_OPEN    7
+#define LID_TL_MAX     60
+#define LID_TL_OPEN    40
 #define LID_TL_CLOSED  0
  
 #define LID_TR_MIN     0
-#define LID_TR_MAX     7
-#define LID_TR_OPEN    0
-#define LID_TR_CLOSED  7
+#define LID_TR_MAX     58
+#define LID_TR_OPEN    20
+#define LID_TR_CLOSED  58
  
 #define LID_BL_MIN     0
-#define LID_BL_MAX     4
+#define LID_BL_MAX     50
 #define LID_BL_OPEN    0
-#define LID_BL_CLOSED  4
+#define LID_BL_CLOSED  15
  
 #define LID_BR_MIN     0
-#define LID_BR_MAX     4
-#define LID_BR_OPEN    4
+#define LID_BR_MAX     54
+#define LID_BR_OPEN    40
 #define LID_BR_CLOSED  0
 
 #define MOUTH_MIN      0
-#define MOUTH_MAX      20
+#define MOUTH_MAX      40
 
 // BLE
 #define BLE_DEVICE_NAME     "AnimatronicHead"

@@ -12,9 +12,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from host.interpreter.transport import HeadTransport
-from host.interpreter.emotion_map import SERVO_ORDER, LID_SERVOS
+from host.interpreter.emotion_map import SERVO_ORDER, LID_SERVOS, EMOTION_POSES
+from host.interpreter.servo_calc import calculate, to_array
 
-STEP = 1
+STEP = 5
 
 LIMITS_PATH = Path(__file__).parent.parent / "config" / "servo_limits.yaml"
 
@@ -49,7 +50,7 @@ class Tuner:
     def __init__(self, limits: dict):
         self.limits = limits
         self.pose = raw_neutral_pose(limits)
-        self.selected = 0 
+        self.selected = 0  # индекс в SERVO_ORDER
         self.transport = HeadTransport()
 
     async def connect(self):
@@ -59,7 +60,7 @@ class Tuner:
 
     def print_state(self):
         print("\n" + "=" * 50)
-        print("SERVO TUNER — управление сервоприводами")
+        print("SERVO TUNER — управление сервоприводами (сырые градусы)")
         print("=" * 50)
         for i, servo in enumerate(SERVO_ORDER):
             marker = "→ " if i == self.selected else "  "
@@ -73,6 +74,7 @@ class Tuner:
         print(f"  a/d — уменьшить/увеличить угол на {STEP}°")
         print("  число — ввести угол напрямую (например 5)")
         print("  n — вернуть все в нейтраль (веки открыты, центр)")
+        print("  e — тест эмоции (полная поза через интерпретатор)")
         print("  q — выход")
         print("=" * 50)
 
@@ -86,6 +88,30 @@ class Tuner:
             await self.transport.send_pose(angles)
         except Exception as e:
             print(f"[ошибка отправки] {e}")
+
+    async def test_emotion(self, loop):
+        names = list(EMOTION_POSES.keys())
+        print("\nДоступные эмоции:")
+        for i, name in enumerate(names, 1):
+            print(f"  {i}. {name}")
+
+        choice = await loop.run_in_executor(None, input, "Номер? (Enter для отмены): ")
+        choice = choice.strip()
+        if not choice:
+            return
+
+        if not choice.isdigit() or not (1 <= int(choice) <= len(names)):
+            print("Нет номера!")
+            return
+
+        emotion = names[int(choice) - 1]
+        pose = calculate({emotion: 1.0}, functions=[], limits=self.limits)
+
+        print(f"\n[тест] эмоция: {emotion}")
+        print(f"[тест] углы: {pose}")
+
+        self.pose = pose
+        await self.apply()
 
     async def run(self):
         loop = asyncio.get_event_loop()
@@ -112,6 +138,8 @@ class Tuner:
             elif cmd == "n":
                 self.pose = raw_neutral_pose(self.limits)
                 await self.apply()
+            elif cmd == "e":
+                await self.test_emotion(loop)
             elif cmd.lstrip("-").replace(".", "", 1).isdigit():
                 servo = SERVO_ORDER[self.selected]
                 self.pose[servo] = self._clamp(servo, float(cmd))
@@ -129,7 +157,10 @@ async def main():
     try:
         await tuner.connect()
     except Exception as e:
-        print(f"[ошибка] {e}")
+        print(f"[ошибка] тип: {type(e).__name__}")
+        print(f"[ошибка] repr: {e!r}")
+        import traceback
+        traceback.print_exc()
         return
 
     await tuner.run()

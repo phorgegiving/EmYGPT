@@ -16,8 +16,8 @@ NEUTRAL_POSE = {
 
 EMOTION_POSES = {
     "happy": {
-        "lid_tl": 0.45, "lid_tr": 0.45,
-        "lid_bl": 0.7, "lid_br": 0.7,
+        "lid_tl": 1, "lid_tr": 1,
+        "lid_bl": 0.1, "lid_br": 0.1,
         "mouth": 20,
     },
     "sad": {
@@ -28,7 +28,7 @@ EMOTION_POSES = {
     },
     "angry": {
         "lid_tl": 0.3, "lid_tr": 0.3,
-        "lid_bl": 0.5, "lid_br": 0.5,
+        "lid_bl": 0.3, "lid_br": 0.3,
         "eyes_tilt": 95,
         "mouth": 8,
     },
@@ -44,8 +44,8 @@ EMOTION_POSES = {
         "mouth": 12,
     },
     "disgust": {
-        "lid_tl": 0.55, "lid_tr": 0.75,
-        "lid_bl": 0.6, "lid_br": 0.6,
+        "lid_tl": 0.25, "lid_tr": 0.75,
+        "lid_bl": 0.3, "lid_br": 0.7,
         "mouth": 3,
     },
     "neutral": dict(NEUTRAL_POSE),
