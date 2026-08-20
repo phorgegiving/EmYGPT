@@ -13,6 +13,7 @@ from host.interpreter.servo_calc import calculate, to_array
 
 
 LIMITS_PATH = Path(__file__).parent.parent / "config" / "servo_limits.yaml"
+LLM_BLINK_TIMES = 2
  
  
 def load_limits() -> dict:
@@ -27,7 +28,7 @@ async def main():
     memory = Memory()
     limits = load_limits()
  
-    transport = HeadTransport() # подключение
+    transport = HeadTransport()
     connected = False
     try:
         await transport.connect(timeout=5.0)
@@ -82,6 +83,12 @@ async def main():
                 await transport.send_pose(to_array(pose))
             except Exception as e:
                 print(f"[BLE] ошибка отправки: {e}")
+
+            if "blink" in functions:
+                try:
+                    await transport.send_blink(times=LLM_BLINK_TIMES)
+                except Exception as e:
+                    print(f"[BLE] ошибка отправки blink: {e}")
  
         print(f"\n{persona['name']}: {response['text']}")
         print(f"  эмоции: {emotion_state.dominant()} | functions: {functions}")

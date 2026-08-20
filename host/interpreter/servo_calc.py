@@ -11,13 +11,11 @@ open/closed из servo_limits.yaml — так асинхронные и разн
 from .emotion_map import get_pose, SERVO_ORDER, NEUTRAL_POSE, LID_SERVOS
 
 LOOK_OFFSETS = {
-    "look_left":  {"eyes_pan": -15},
-    "look_right": {"eyes_pan": +15},
-    "look_up":    {"eyes_tilt": -10},
-    "look_down":  {"eyes_tilt": +10},
+    "look_left":  {"eyes_pan": -25},
+    "look_right": {"eyes_pan": +25},
+    "look_up":    {"eyes_tilt": -15},
+    "look_down":  {"eyes_tilt": +15},
 }
-
-BLINK_POSE = {s: 0.0 for s in LID_SERVOS}
 
 
 def blend_pose(emotions: dict) -> dict:
@@ -42,8 +40,6 @@ def apply_functions(pose: dict, functions: list[str]) -> dict:
         if fn in LOOK_OFFSETS:
             for servo, delta in LOOK_OFFSETS[fn].items():
                 result[servo] += delta
-        elif fn == "blink":
-            result.update(BLINK_POSE)
 
     return result
 

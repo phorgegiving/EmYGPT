@@ -36,7 +36,7 @@ void handle_command(const String& json) {
         }
     }
 
-    // центрировние
+    // одиночные команды
     if (doc["cmd"].is<const char*>()) {
         String cmd = doc["cmd"].as<String>();
         if (cmd == "center") {
@@ -44,8 +44,10 @@ void handle_command(const String& json) {
             comm_send("{\"ok\":true,\"cmd\":\"center\"}");
             return;
         }
-        if (cmd == "ping") {
-            comm_send("{\"ok\":true,\"cmd\":\"ping\"}");
+        if (cmd == "blink") {
+            int times = doc["times"] | 1;
+            servo_start_blink(times);
+            comm_send("{\"ok\":true,\"cmd\":\"blink\"}");
             return;
         }
     }
@@ -78,4 +80,6 @@ void loop() {
     }
 
     servos_update();
+
+    servo_blink_update();
 }

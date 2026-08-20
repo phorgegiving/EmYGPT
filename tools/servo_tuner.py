@@ -75,6 +75,8 @@ class Tuner:
         print("  число — ввести угол напрямую (например 5)")
         print("  n — вернуть все в нейтраль (веки открыты, центр)")
         print("  e — тест эмоции (полная поза через интерпретатор)")
+        print("  b — тест моргания (одиночное)")
+        print("  bb — тест серии морганий (3 подряд)")
         print("  q — выход")
         print("=" * 50)
 
@@ -140,6 +142,16 @@ class Tuner:
                 await self.apply()
             elif cmd == "e":
                 await self.test_emotion(loop)
+            elif cmd == "b":
+                try:
+                    await self.transport.send_blink(times=1)
+                except Exception as e:
+                    print(f"[ошибка blink] {e}")
+            elif cmd == "bb":
+                try:
+                    await self.transport.send_blink(times=3)
+                except Exception as e:
+                    print(f"[ошибка blink] {e}")
             elif cmd.lstrip("-").replace(".", "", 1).isdigit():
                 servo = SERVO_ORDER[self.selected]
                 self.pose[servo] = self._clamp(servo, float(cmd))

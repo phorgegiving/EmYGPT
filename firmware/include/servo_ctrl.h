@@ -1,7 +1,6 @@
 #pragma once
 #include <Arduino.h>
 
-// индексы серваков
 enum ServoID {
     SERVO_EYES_PAN = 0,
     SERVO_EYES_TILT,
@@ -27,4 +26,7 @@ void servos_init();
 void servos_update();                          // луп!!!
 void servo_set_target(ServoID id, float angle);
 void servo_set_all(float angles[SERVO_COUNT]);
-void servos_center();                          // сбросить все сервы в центральное положение
+void servos_center();
+
+void servo_start_blink(int times);
+void servo_blink_update();                     // в loop()
